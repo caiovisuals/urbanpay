@@ -16,20 +16,20 @@ export default function LoginPage() {
         setLoading(true);
 
         try {
-        const res = await fetch("/api/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(form),
-            credentials: "include",
-        });
+            const res = await fetch("/api/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(form),
+                credentials: "include",
+            });
 
-        const data = await res.json();
+            const data = await res.json();
 
-        if (!res.ok) {
-            setError(data.error || "Erro ao logar");
-        } else {
-            router.push("/dashboard");
-        }
+            if (!res.ok) {
+                setError(data.error || "Erro ao logar");
+            } else {
+                router.push("/dashboard");
+            }
         } catch {
             setError("Erro de rede");
         } finally {

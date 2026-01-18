@@ -22,7 +22,7 @@ export default function PublicHeader() {
     return (
         <header className="px-5 lg:px-10 py-6 flex justify-between items-center gap-4 lg:gap-0">
             <Link href="/" className="w-auto lg:w-[22%]">
-                logo
+                UrbanPay
             </Link>
             <div className="w-[54%] hidden items-center justify-center lg:flex">
                 <nav className="flex flex-row items-center justify-center gap-6 2xl:gap-8 whitespace-nowrap">
