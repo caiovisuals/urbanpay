@@ -1,8 +1,10 @@
 import Link from "next/link"
+import Image from "next/image"
 
-export default function HomeFooter() {
+export default function PublicFooter() {
     return (
-        <footer className="px-5 md:px-20 lg:px-30 xl:px-50 py-24 flex flex-col gap-8">
+        <footer className="flex flex-col gap-8 bg-[var(--black-background)] text-[var(--white-text)] px-5 md:px-20 lg:px-30 xl:px-50 py-24">
+            <div className="flex flex-row items-start justify-between flex-wrap gap-5">
                 <div className="flex flex-row gap-15 xl:gap-25">
                     <div className="flex flex-col gap-2">
                         <span className="font-semibold whitespace-nowrap">LINKS ÚTEIS</span>
@@ -33,33 +35,33 @@ export default function HomeFooter() {
                     <div className="flex flex-col gap-2">
                         <span className="font-semibold whitespace-nowrap">REDES SOCIAIS</span>
                         <nav className="flex flex-row gap-2">
-                            <a href="https://instagram.com">
-                                <img src="social-media-icons/instagram.png" alt="Instagram" className="size-7 object-contain aspect-square" draggable="false"/>
-                            </a>
-                            <a href="https://tiktok.com">
-                                <img src="social-media-icons/tiktok.png" alt="TikTok" className="size-7 object-contain aspect-square" draggable="false"/>
-                            </a>
-                            <a href="https://youtube.com">
-                                <img src="social-media-icons/youtube.png" alt="Youtube" className="size-7 object-contain aspect-square" draggable="false"/>
-                            </a>
+                            <Link href="https://instagram.com" target="_blank">
+                            </Link>
+                            <Link href="https://tiktok.com" target="_blank">
+                            </Link>
+                            <Link href="https://youtube.com" target="_blank">
+                            </Link>
                         </nav>
                     </div>
                 </div>
-                <div className="flex flex-row justify-between items-end">
-                    <div className="flex flex-col gap-5">
-                        <h1>Logo</h1>
-                        <p className="whitespace-nowrap">© {new Date().getFullYear()} Urbanpay</p>
-                        <div className="whitespace-nowrap">
-                            <p><span className="font-semibold">CNPJ: </span>00.000.000/0000-00</p>
-                            <p>Avenida Oceanica, Salvador, Bahia - 00000-000</p>
-                        </div>
-                    </div>
-                    <div className="flex flex-row gap-8">
-                        <Link href="/rates">Tarifas</Link>
-                        <Link href="/terms">Termos de Uso</Link>
-                        <Link href="/security">Segurança</Link>
+                <div className="w-25 aspect-[2838/760] relative">
+                    <Image src="/assets/white-logo.png" alt="Urb Logo" className="select-none object-contain" draggable="false" fill />
+                </div>
+            </div>
+            <div className="flex flex-row justify-between items-end">
+                <div className="flex flex-col gap-5">
+                    <p className="whitespace-nowrap">© {new Date().getFullYear()} Urbanpay</p>
+                    <div className="whitespace-nowrap">
+                        <p><span className="font-semibold">CNPJ: </span>00.000.000/0000-00</p>
+                        <p>Avenida Oceanica, Salvador, Bahia - 00000-000</p>
                     </div>
                 </div>
+                <div className="flex flex-row gap-8">
+                    <Link href="/rates">Tarifas</Link>
+                    <Link href="/terms">Termos de Uso</Link>
+                    <Link href="/security">Segurança</Link>
+                </div>
+            </div>
         </footer>
     )
 }

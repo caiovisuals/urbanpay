@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useEffect, useState } from "react"
-import type { User } from "@/lib/db"
+import type { User } from "@/_lib/db"
 
 export default function Navbar() {
     const pathname = usePathname()
@@ -12,16 +12,16 @@ export default function Navbar() {
     useEffect(() => {
         async function fetchUser() {
         try {
-            const res = await fetch("/api/me", { credentials: "include" });
+            const res = await fetch("/api/me", { credentials: "include" })
             if (res.ok) {
-            const data = await res.json();
-            setUser(data);
+            const data = await res.json()
+            setUser(data)
             }
         } catch (err) {
-            console.error("Erro ao buscar usuário:", err);
+            console.error("Erro ao buscar usuário:", err)
         }
         }
-        fetchUser();
+        fetchUser()
     }, [])
 
     const navItems = [
@@ -32,7 +32,7 @@ export default function Navbar() {
         { icon: "", label: "Investimentos", href: "/investments" },
         { icon: "", label: "Configurações", href: "/settings" },
         { icon: "", label: "Ajuda", href: "/assistance" },
-    ];
+    ]
 
     return (
         <aside className="w-full h-25 md:w-80 md:h-full bg-blue-600 text-white flex flex-row md:flex-col items-center md:items-start jutify-center md:justify-between p-4 gap-6">

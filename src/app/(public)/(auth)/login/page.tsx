@@ -1,19 +1,19 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+import Link from "next/link"
 
 export default function LoginPage() {
-    const router = useRouter();
-    const [form, setForm] = useState({ email: "", password: "" });
-    const [error, setError] = useState("");
-    const [loading, setLoading] = useState(false);
+    const router = useRouter()
+    const [form, setForm] = useState({ email: "", password: "" })
+    const [error, setError] = useState("")
+    const [loading, setLoading] = useState(false)
 
     async function handleSubmit(e: React.FormEvent) {
-        e.preventDefault();
-        setError("");
-        setLoading(true);
+        e.preventDefault()
+        setError("")
+        setLoading(true)
 
         try {
             const res = await fetch("/api/login", {
@@ -21,27 +21,24 @@ export default function LoginPage() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(form),
                 credentials: "include",
-            });
+            })
 
-            const data = await res.json();
+            const data = await res.json()
 
             if (!res.ok) {
-                setError(data.error || "Erro ao logar");
+                setError(data.error || "Erro ao logar")
             } else {
-                router.push("/dashboard");
+                router.push("/dashboard")
             }
         } catch {
-            setError("Erro de rede");
+            setError("Erro de rede")
         } finally {
-            setLoading(false);
+            setLoading(false)
         }
     }
 
     return (
-        <div className="flex justify-center items-center h-screen bg-gray-900 text-white">
-            <Link href="/" className="absolute top-6 left-6 text-xl font-bold text-blue-400">
-                logo
-            </Link>
+        <div className="flex justify-center items-center h-full">
             <form onSubmit={handleSubmit} className="bg-gray-800 p-8 rounded-2xl w-full max-w-lg space-y-4 shadow-lg">
                 <h1 className="text-2xl font-bold text-blue-400 mb-4">Login</h1>
                 {error && <p className="text-red-500">{error}</p>}
@@ -80,5 +77,5 @@ export default function LoginPage() {
                 </div>
             </form>
         </div>
-    );
+    )
 }

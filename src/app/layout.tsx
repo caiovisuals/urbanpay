@@ -45,9 +45,10 @@ export const metadata: Metadata = {
     }
 }
 
-export default function PrincipalLayout({children,}: Readonly<{children: React.ReactNode;}>) {
+export default function PrincipalLayout({children}: Readonly<{children: React.ReactNode}>) {
     return (
         <html lang="pt-br">
+            <head></head>
             <body className="size-full">
                 {children}
             </body>

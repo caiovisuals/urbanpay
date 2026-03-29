@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import bcrypt from "bcryptjs"
 import { SignJWT } from "jose"
-import { users } from "@/lib/db"
+import { users } from "@/_lib/db"
 
 const SECRET = new TextEncoder().encode(process.env.JWT_SECRET)
 

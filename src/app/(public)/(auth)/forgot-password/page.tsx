@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import Link from "next/link";
+import Link from "next/link"
 
 export default function ForgotPasswordPage() {
     const [email, setEmail] = useState("")
@@ -18,27 +18,24 @@ export default function ForgotPasswordPage() {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email }),
-            });
+            })
 
-            const data = await res.json();
+            const data = await res.json()
 
             if (!res.ok) {
-                setMessage(data.error || "Erro ao solicitar redefinição.");
+                setMessage(data.error || "Erro ao solicitar redefinição.")
             } else {
-                setMessage("Se este e-mail estiver cadastrado, enviaremos um link de recuperação.");
+                setMessage("Se este e-mail estiver cadastrado, enviaremos um link de recuperação.")
             }
         } catch {
-            setMessage("Erro de rede. Tente novamente.");
+            setMessage("Erro de rede. Tente novamente.")
         } finally {
-            setLoading(false);
+            setLoading(false)
         }
     }
 
     return (
-        <div className="flex justify-center items-center h-screen bg-gray-900 text-white">
-            <Link href="/" className="absolute top-6 left-6 text-xl font-bold text-blue-400">
-                logo
-            </Link>
+        <div className="flex justify-center items-center h-full">
             <form onSubmit={handleSubmit} className="bg-gray-800 p-8 rounded-2xl w-full max-w-md space-y-4 shadow-lg">
                 <h1 className="text-2xl font-bold text-blue-400 mb-4">Recuperar Senha</h1>
                 {message && <p className="text-sm text-center">{message}</p>}

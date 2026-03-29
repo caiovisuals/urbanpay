@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { User } from "@/lib/db"
+import { User } from "@/_lib/db"
 
 export default function Settings() {
     const [user, setUser] = useState<User | null>(null)
@@ -10,54 +10,54 @@ export default function Settings() {
     const [avatarFile, setAvatarFile] = useState<File | null>(null)
     const [isEditing, setIsEditing] = useState(false)
 
-    const userId = 1;
+    const userId = 1
 
     useEffect(() => {
         async function fetchUser() {
-            const res = await fetch(`/api/user/settings?userId=${userId}`);
-            const data = await res.json();
-            setUser(data);
-            setForm({ fullName: data.fullName, email: data.email, phone: data.phone });
-            setLoading(false);
+            const res = await fetch(`/api/user/settings?userId=${userId}`)
+            const data = await res.json()
+            setUser(data)
+            setForm({ fullName: data.fullName, email: data.email, phone: data.phone })
+            setLoading(false)
         }
-        fetchUser();
-    }, []);
+        fetchUser()
+    }, [])
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-        setForm({ ...form, [e.target.name]: e.target.value });
+        setForm({ ...form, [e.target.name]: e.target.value })
     }
 
     function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
         if (e.target.files && e.target.files[0]) {
-            setAvatarFile(e.target.files[0]);
+            setAvatarFile(e.target.files[0])
         }
     }
 
     async function handleSave() {
-        let avatarUrl = user?.avatarUrl;
+        let avatarUrl = user?.avatarUrl
 
         if (avatarFile) {
-            const formData = new FormData();
-            formData.append("file", avatarFile);
-            formData.append("userId", String(userId));
+            const formData = new FormData()
+            formData.append("file", avatarFile)
+            formData.append("userId", String(userId))
 
             const uploadRes = await fetch("/api/user/upload-avatar", {
                 method: "POST",
                 body: formData,
-            });
-            const uploadData = await uploadRes.json();
-            avatarUrl = uploadData.url;
+            })
+            const uploadData = await uploadRes.json()
+            avatarUrl = uploadData.url
         }
 
         const res = await fetch("/api/user/settings", {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ userId, ...form, avatarUrl }),
-        });
+        })
 
-        const updatedUser = await res.json();
-        setUser(updatedUser);
-        setIsEditing(false);
+        const updatedUser = await res.json()
+        setUser(updatedUser)
+        setIsEditing(false)
     }
 
     return (

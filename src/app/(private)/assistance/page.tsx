@@ -1,32 +1,32 @@
-"use client";
+"use client"
 
-import { useState } from "react";
+import { useState } from "react"
 
 export default function Assistance() {
-    const [form, setForm] = useState({ name: "", email: "", message: "" });
-    const [message, setMessage] = useState("");
-    const [loading, setLoading] = useState(false);
+    const [form, setForm] = useState({ name: "", email: "", message: "" })
+    const [message, setMessage] = useState("")
+    const [loading, setLoading] = useState(false)
 
     const faqs = [
         { q: "Como posso resetar minha senha?", a: "Clique em 'Esqueci minha senha' na página de login e siga os passos." },
         { q: "Como alterar meus dados cadastrais?", a: "Acesse Configurações > Perfil e atualize seus dados." },
         { q: "Como entrar em contato com o suporte?", a: "Você pode enviar uma mensagem pelo formulário ou usar nosso chat online." },
-    ];
+    ]
 
-    const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
+    const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null)
 
     async function handleSubmit(e: React.FormEvent) {
-        e.preventDefault();
-        setLoading(true);
+        e.preventDefault()
+        setLoading(true)
         try {
             // Aqui você chamaria sua API de envio
-            await new Promise((r) => setTimeout(r, 1000));
-            setMessage("Mensagem enviada com sucesso!");
-            setForm({ name: "", email: "", message: "" });
+            await new Promise((r) => setTimeout(r, 1000))
+            setMessage("Mensagem enviada com sucesso!")
+            setForm({ name: "", email: "", message: "" })
         } catch (err) {
-            setMessage("Erro ao enviar a mensagem.");
+            setMessage("Erro ao enviar a mensagem.")
         } finally {
-            setLoading(false);
+            setLoading(false)
         }
     }
 
@@ -90,5 +90,5 @@ export default function Assistance() {
                 </div>
             </div>
         </div>
-    );
+    )
 }

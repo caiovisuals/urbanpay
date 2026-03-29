@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState, useRef } from "react"
-import { Piggy } from "@/lib/db"
+import { Piggy } from "@/_lib/db"
 
 export default function Piggys() {
     const [piggys, setPiggys] = useState<Piggy[]>([])
@@ -18,21 +18,21 @@ export default function Piggys() {
             try {
                 const res = await fetch("/api/user/piggys", {
                     credentials: "include",
-                });
+                })
                 if (res.ok) {
-                const data = await res.json();
-                setPiggys(data);
+                    const data = await res.json()
+                    setPiggys(data)
                 } else {
-                console.error("Erro ao buscar piggys");
+                    console.error("Erro ao buscar piggys")
                 }
             } catch (err) {
-                console.error(err);
+                console.error(err)
             } finally {
-                setLoading(false);
+                setLoading(false)
             }
         }
-        fetchPiggys();
-    }, []);
+        fetchPiggys()
+    }, [])
 
     async function handleCreate() {
         if (!name) return
@@ -42,16 +42,16 @@ export default function Piggys() {
             credentials: "include",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ name, goal }),
-        });
+        })
 
         if (res.ok) {
-            const newPiggy = await res.json();
-            setPiggys((prev) => [...prev, newPiggy]);
-            setModal(null);
-            setName("");
-            setGoal(undefined);
+            const newPiggy = await res.json()
+            setPiggys((prev) => [...prev, newPiggy])
+            setModal(null)
+            setName("")
+            setGoal(undefined)
         } else {
-            console.error("Erro ao criar porquinho");
+            console.error("Erro ao criar porquinho")
         }
     }
 
@@ -105,7 +105,7 @@ export default function Piggys() {
                     <p className="text-gray-500 col-span-full">Você ainda não criou nenhum porquinho.</p>
                 ) : (
                     piggys.map((piggy) => {
-                        const progress = piggy.goal ? Math.min((piggy.value / piggy.goal) * 100, 100) : 0;
+                        const progress = piggy.goal ? Math.min((piggy.value / piggy.goal) * 100, 100) : 0
 
                         return (
                             <div key={piggy.id} className="bg-white rounded-xl shadow-md p-4 flex flex-col justify-between hover:shadow-lg transition">
@@ -124,7 +124,7 @@ export default function Piggys() {
                                     Ver detalhes
                                 </button>
                             </div>
-                        );
+                        )
                     })
                 )}
             </div>

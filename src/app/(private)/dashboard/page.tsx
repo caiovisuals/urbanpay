@@ -1,39 +1,39 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Transaction } from "@/lib/db"
+import { Transaction } from "@/_lib/db"
 
 export default function Dashboard() {
-    const [balance, setBalance] = useState<number>(0);
-    const [transactions, setTransactions] = useState<Transaction[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [balance, setBalance] = useState<number>(0)
+    const [transactions, setTransactions] = useState<Transaction[]>([])
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         async function fetchData() {
         try {
             const [balanceRes, transactionsRes] = await Promise.all([
-            fetch("/api/user/balance"),
-            fetch("/api/user/transactions"),
-            ]);
+                fetch("/api/user/balance"),
+                fetch("/api/user/transactions"),
+            ])
 
-            const balanceData = await balanceRes.json();
-            const transactionsData = await transactionsRes.json();
+            const balanceData = await balanceRes.json()
+            const transactionsData = await transactionsRes.json()
 
-            setBalance(typeof balanceData.balance === "number" ? balanceData.balance : 0);
-            setTransactions(Array.isArray(transactionsData.transactions) ? transactionsData.transactions : []);
+            setBalance(typeof balanceData.balance === "number" ? balanceData.balance : 0)
+            setTransactions(Array.isArray(transactionsData.transactions) ? transactionsData.transactions : [])
         } catch (err) {
-            console.error("Erro ao buscar dados:", err);
+            console.error("Erro ao buscar dados:", err)
         } finally {
-            setLoading(false);
+            setLoading(false)
         }
         }
 
-        fetchData();
-    }, []);
+        fetchData()
+    }, [])
 
     const formatCurrency = (value: number | null) => {
-        if (value === null) return "0,00";
-        return value.toFixed(2).replace(".", ",");
+        if (value === null) return "0,00"
+        return value.toFixed(2).replace(".", ",")
     }
 
     return (
