@@ -8,6 +8,7 @@ Este repositório tem como objetivo estudar e desenvolver o código-fonte e os r
 ## Objetivo
 
 - Estudar a arquitetura de um banco digital utilizando tecnologias modernas do ecossistema JavaScript
+- Criar uma plataforma que tentasse ao máximo solucionar alguns problemas de segurança do mundo real envolvendo roubos, transferencias indevidas e etc
 - Implementar fluxos reais de autenticação, segurança e gestão de usuários
 - Desenvolver funcionalidades bancárias comuns, como:
     Conta corrente digital
@@ -23,7 +24,7 @@ Este repositório tem como objetivo estudar e desenvolver o código-fonte e os r
 
 O projeto foi desenvolvido com as seguintes dependências:
 
-- **[Next.js](https://nextjs.org)** – v15.3.3  
+- **[Next.js](https://nextjs.org)** – v16.2.1
 - **[Bcrypt](https://www.npmjs.com/package/bcrypt)** – ^3.0.2  
 - **[jose](https://www.npmjs.com/package/jose)** – ^6.1.0
 
