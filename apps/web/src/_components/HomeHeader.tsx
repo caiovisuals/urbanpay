@@ -25,9 +25,13 @@ export default function HomeHeader() {
     
     return (
         <header className="w-full h-16 px-6 bg-gray-800 text-white flex items-center justify-center">
-            <Link href="/dashboard" className="w-[20%] flex justify-start items-center">
-                <h1 className="text-xl font-bold">UrbanPay</h1>
-            </Link>
+            <div className="w-[20%] flex items-center justify-start">
+                <Link href="/dashboard" className="inline-block w-fit">
+                    <div className="w-32 aspect-[2838/760] relative">
+                        <Image src="/assets/white-logo.png" alt="Urb Logo" className="select-none object-contain" draggable="false" fill />
+                    </div>
+                </Link>
+            </div>
             <div className="w-[60%] flex justify-center items-center">
             </div>
             <Link href="/settings" className="w-[20%] flex flex-row gap-2 justify-end items-center">
