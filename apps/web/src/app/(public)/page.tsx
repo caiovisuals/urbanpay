@@ -12,7 +12,6 @@ export default function LandingPage() {
         <div className="flex flex-col">
             <PublicHeader />
             <main className="size-full flex flex-col bg-gradient-to-br from-blue-50 to-white text-gray-900">
-                {/* Hero Section */}
                 <section className="flex flex-col items-center justify-center text-center px-5 md:px-20 lg:px-40 xl:px-70 2xl:px-100 h-[calc(100vh-92px)]">
                     <h1 className="text-5xl md:text-6xl font-extrabold leading-none mb-6">
                         Seu banco digital, simples, transparente e baiano.
@@ -31,8 +30,6 @@ export default function LandingPage() {
                         </button>
                     </div>
                 </section>
-
-                {/* Features Section */}
                 <section className="px-5 py-20 bg-blue-600 text-white flex flex-col items-center gap-5">
                     <h2 className="text-3xl md:text-4xl font-bold mb-6">Tudo que você precisa de um banco. Em um só banco.</h2>
                     <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-12">
@@ -50,7 +47,6 @@ export default function LandingPage() {
                         </div>
                     </div>
                 </section>
-
                 <section className="px-5 py-24 flex flex-col items-center justify-center gap-5">
                     <h2 className="text-3xl md:text-4xl font-bold mb-6">Escolha o seu cartão</h2>
                     <div className="flex flex-col md:flex-row gap-10 justify-center">
@@ -74,7 +70,6 @@ export default function LandingPage() {
                         </div>
                     </div>
                 </section>
-
                 <section className="px-5 py-24 flex flex-col items-center justify-center gap-5 bg-blue-300">
                     <div className="mb-6">
                         <h2 className="text-3xl md:text-4xl font-bold">Mais de 1.000 investimentos ao seu alcance!</h2>
@@ -122,7 +117,6 @@ export default function LandingPage() {
                         </div>
                     </div>
                 </section>
-
                 <section className="px-5 py-24 flex flex-col items-center justify-center gap-5">
                     <h2 className="text-3xl md:text-4xl font-bold mb-6">Conheça nossos produtos</h2>
                     <div className="flex flex-row gap-8 justify-center">
@@ -165,8 +159,6 @@ export default function LandingPage() {
                         )}
                     </div>
                 </section>
-
-                {/* Call-to-Action Section */}
                 <section className="px-5 py-24 bg-blue-600 text-white text-center gap-5">
                     <h2 className="text-3xl md:text-4xl font-bold mb-6">Pronto para simplificar sua vida financeira?</h2>
                     <p className="text-lg text-blue-100 mb-8">
