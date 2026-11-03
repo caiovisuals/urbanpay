@@ -8,10 +8,13 @@ type CoreCall = Parameters<typeof coreFetch>[1]
 /** Converte o Problem Details do core no formato que as telas já usam: { error, code, fields }. */
 export async function problemResponse(res: Response): Promise<NextResponse> {
     const problem = await readProblem(res)
-    return NextResponse.json(
+    const out = NextResponse.json(
         { error: problem.detail ?? "Erro inesperado", code: problem.code, fields: problem.fields },
         { status: res.status },
     )
+    const retryAfter = res.headers.get("retry-after")
+    if (retryAfter) out.headers.set("Retry-After", retryAfter)
+    return out
 }
 
 export function unavailable(): NextResponse {

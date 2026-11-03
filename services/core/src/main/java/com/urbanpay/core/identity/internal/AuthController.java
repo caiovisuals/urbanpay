@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 @RestController
@@ -29,13 +30,14 @@ class AuthController {
 
     @PostMapping("/auth/register")
     @ResponseStatus(HttpStatus.CREATED)
-    TokenResponse register(@Valid @RequestBody RegisterRequest req) {
-        return TokenResponse.from(auth.register(req));
+    TokenResponse register(@Valid @RequestBody RegisterRequest req, HttpServletRequest http) {
+        return TokenResponse.from(auth.register(req, http.getRemoteAddr()));
     }
 
+    /** O IP vem de getRemoteAddr(), já resolvido a partir do X-Forwarded-For de proxies confiáveis. */
     @PostMapping("/auth/login")
-    TokenResponse login(@Valid @RequestBody LoginRequest req) {
-        return TokenResponse.from(auth.login(req));
+    TokenResponse login(@Valid @RequestBody LoginRequest req, HttpServletRequest http) {
+        return TokenResponse.from(auth.login(req, http.getRemoteAddr()));
     }
 
     @PostMapping("/auth/refresh")

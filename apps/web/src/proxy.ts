@@ -11,7 +11,7 @@ import { ACCESS_COOKIE, REFRESH_COOKIE, clearSession, setSession } from "@/_lib/
 const JWKS = createRemoteJWKSet(new URL(`${CORE_API_URL}/.well-known/jwks.json`))
 const ISSUER = process.env.JWT_ISSUER ?? "urbanpay-core"
 
-const PRIVATE = ["/dashboard", "/cards", "/piggys", "/loans", "/investments", "/settings", "/assistance"]
+const PRIVATE = ["/dashboard", "/transfer", "/cards", "/piggys", "/loans", "/investments", "/settings", "/assistance"]
 const AUTH_PAGES = ["/login", "/register", "/forgot-password"]
 
 const matches = (path: string, list: string[]) => list.some((p) => path === p || path.startsWith(`${p}/`))

@@ -21,6 +21,9 @@ spring:
 
 server:
   shutdown: graceful
+  # Confia no X-Forwarded-For apenas quando vem de proxies internos (BFF, gateway, rede do
+  # cluster). Sem isso, todo mundo pareceria ter o IP do BFF e o rate limit por IP não serviria.
+  forward-headers-strategy: native
 
 urbanpay:
   security:
@@ -39,6 +42,14 @@ urbanpay:
     pin:
       max-attempts: 5
       lock-duration: 15m
+    rate-limit:
+      # Por IP: freia ataques de força bruta e de "credential stuffing" vindos de uma origem.
+      login-per-ip-per-minute: 20
+      register-per-ip-per-hour: 10
+      # Por e-mail: freia ataques distribuídos (vários IPs) contra a mesma conta. Contamos só
+      # falhas e não bloqueamos a conta de vez, para o atacante não conseguir trancar a vítima.
+      login-failures-per-email: 5
+      login-failure-window: 15m
 
 management:
   endpoints:

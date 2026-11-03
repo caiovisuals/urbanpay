@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { coreFetch, type TokenPair } from "@/_lib/core/client"
+import { clientIp, coreFetch, type TokenPair } from "@/_lib/core/client"
 import { problemResponse, unavailable } from "@/_lib/core/bff"
 import { setSession } from "@/_lib/core/session"
 
@@ -11,6 +11,7 @@ export async function POST(req: Request) {
     try {
         res = await coreFetch("/api/v1/auth/register", {
             method: "POST",
+            clientIp: clientIp(req.headers),
             // O core espera LocalDate ("AAAA-MM-DD"); o formulário envia um Date serializado em ISO.
             body: { fullName, email, phone, cpf, birthDate: String(birthDate ?? "").slice(0, 10), password, pin },
         })

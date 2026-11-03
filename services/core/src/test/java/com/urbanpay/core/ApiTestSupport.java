@@ -13,10 +13,17 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
 import com.jayway.jsonpath.JsonPath;
 
-@SpringBootTest
+/**
+ * Todos os testes compartilham o IP 127.0.0.1 do MockMvc, então os limites por IP ficam altos
+ * aqui. O rate limit é testado em {@code AuthRateLimitTests}, com limites baixos.
+ */
+@SpringBootTest(properties = {
+        "urbanpay.security.rate-limit.login-per-ip-per-minute=100000",
+        "urbanpay.security.rate-limit.register-per-ip-per-hour=100000"})
 @AutoConfigureMockMvc
 @ActiveProfiles("dev")
 @Import(TestcontainersConfiguration.class)
@@ -39,12 +46,17 @@ public abstract class ApiTestSupport {
     }
 
     protected TestUser register() throws Exception {
+        return register("127.0.0.1");
+    }
+
+    protected TestUser register(String clientIp) throws Exception {
         var email = "user-" + UUID.randomUUID() + "@example.com";
         var body = """
                 {"fullName":"Fulano de Tal","email":"%s","phone":"+55 11 99999-0000",
                  "cpf":"%s","birthDate":"1990-05-10","password":"%s","pin":"%s"}
                 """.formatted(email, nextCpf(), PASSWORD, PIN);
-        var json = mvc.perform(post("/api/v1/auth/register").contentType(MediaType.APPLICATION_JSON).content(body))
+        var json = mvc.perform(post("/api/v1/auth/register").with(fromIp(clientIp))
+                        .contentType(MediaType.APPLICATION_JSON).content(body))
                 .andExpect(status().isCreated())
                 .andReturn().getResponse().getContentAsString();
         String access = JsonPath.read(json, "$.accessToken");
@@ -54,7 +66,14 @@ public abstract class ApiTestSupport {
         return new TestUser(email, access, refresh, userId);
     }
 
-    protected static String nextCpf() {
+    protected static RequestPostProcessor fromIp(String ip) {
+        return request -> {
+            request.setRemoteAddr(ip);
+            return request;
+        };
+    }
+
+    public static String nextCpf() {
         var base = String.valueOf(CPF_SEQ.getAndIncrement());
         return base + digit(base, 10) + digit(base + digit(base, 10), 11);
     }

@@ -21,22 +21,25 @@ class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokens;
     private final ApplicationEventPublisher events;
+    private final AuthThrottle throttle;
     private final Clock clock;
     /** Hash fixo usado quando o e-mail não existe, para o tempo de resposta não revelar isso. */
     private final String dummyHash;
 
     AuthService(UserRepository users, PasswordEncoder passwordEncoder, TokenService tokens,
-                ApplicationEventPublisher events, Clock clock) {
+                ApplicationEventPublisher events, AuthThrottle throttle, Clock clock) {
         this.users = users;
         this.passwordEncoder = passwordEncoder;
         this.tokens = tokens;
         this.events = events;
+        this.throttle = throttle;
         this.clock = clock;
         this.dummyHash = passwordEncoder.encode("dummy-password-for-timing");
     }
 
     @Transactional
-    TokenService.TokenPair register(RegisterRequest req) {
+    TokenService.TokenPair register(RegisterRequest req, String clientIp) {
+        throttle.checkRegister(clientIp);
         RegistrationRules.validate(req, LocalDate.now(clock));
 
         var email = RegistrationRules.normalizeEmail(req.email());
@@ -61,14 +64,19 @@ class AuthService {
     }
 
     @Transactional
-    TokenService.TokenPair login(LoginRequest req) {
-        var user = users.findByEmail(RegistrationRules.normalizeEmail(req.email()));
+    TokenService.TokenPair login(LoginRequest req, String clientIp) {
+        var email = RegistrationRules.normalizeEmail(req.email());
+        throttle.checkLogin(clientIp, email);
+
+        var user = users.findByEmail(email);
         var hash = user.map(User::getPasswordHash).orElse(dummyHash);
         boolean matches = passwordEncoder.matches(req.password(), hash);
         if (user.isEmpty() || !matches) {
+            throttle.loginFailed(email);
             // Mensagem única: não revelamos se o e-mail existe (evita enumeração de usuários).
             throw new DomainException(HttpStatus.UNAUTHORIZED, "invalid_credentials", "E-mail ou senha inválidos");
         }
+        throttle.loginSucceeded(email);
         return tokens.issueFor(user.get().getId());
     }
 

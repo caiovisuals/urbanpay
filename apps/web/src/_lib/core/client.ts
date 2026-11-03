@@ -21,17 +21,35 @@ export type Problem = {
     fields?: Record<string, string>
 }
 
+/**
+ * IP real do usuário, para o rate limit do core.
+ * O X-Forwarded-For é uma lista "cliente, proxy1, proxy2"; só as entradas adicionadas pelos
+ * NOSSOS proxies são confiáveis (o resto o próprio cliente pode forjar). Por isso lemos da
+ * direita para a esquerda, pulando TRUSTED_PROXY_HOPS - 1 entradas.
+ * Em produção, o Next deve ficar atrás de um load balancer que acrescenta o IP de quem conectou.
+ */
+export function clientIp(headers: Headers): string | undefined {
+    const hops = Math.max(1, Number(process.env.TRUSTED_PROXY_HOPS ?? 1))
+    const chain = (headers.get("x-forwarded-for") ?? "")
+        .split(",")
+        .map((ip) => ip.trim())
+        .filter(Boolean)
+    return chain[chain.length - hops] ?? chain[0]
+}
+
 type CoreRequest = {
     method?: "GET" | "POST" | "PATCH" | "DELETE"
     body?: unknown
     accessToken?: string
     headers?: Record<string, string>
+    clientIp?: string
 }
 
 export async function coreFetch(path: string, req: CoreRequest = {}): Promise<Response> {
     const headers: Record<string, string> = { Accept: "application/json", ...req.headers }
     if (req.body !== undefined) headers["Content-Type"] = "application/json"
     if (req.accessToken) headers.Authorization = `Bearer ${req.accessToken}`
+    if (req.clientIp) headers["X-Forwarded-For"] = req.clientIp
 
     return fetch(`${CORE_API_URL}${path}`, {
         method: req.method ?? "GET",

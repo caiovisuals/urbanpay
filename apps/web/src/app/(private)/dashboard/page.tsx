@@ -1,15 +1,9 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import Link from "next/link"
+import { formatBRL } from "@/_lib/money"
 import type { Transaction } from "@/_lib/types"
-
-/** Formata a string decimal do core ("1234.50") sem passar por aritmética de ponto flutuante. */
-function formatBRL(value: string): string {
-    const negative = value.startsWith("-")
-    const [int, frac = "00"] = value.replace("-", "").split(".")
-    const grouped = int.replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-    return `${negative ? "-" : ""}R$ ${grouped},${frac.padEnd(2, "0")}`
-}
 
 export default function Dashboard() {
     const [balance, setBalance] = useState<string>("0.00")
@@ -47,6 +41,9 @@ export default function Dashboard() {
             <div className="">
                 <p className="text-xl font-semibold leading-tight">Saldo disponível</p>
                 <p className="text-3xl font-bold">{loading ? "..." : formatBRL(balance)}</p>
+                <Link href="/transfer" className="inline-block mt-3 px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-500">
+                    Transferir
+                </Link>
             </div>
             <div className="">
                 <p className="text-xl font-semibold leading-tight">Transações recentes</p>

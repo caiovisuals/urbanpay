@@ -22,6 +22,8 @@
         <spring-modulith.version>2.1.2</spring-modulith.version>
         <springdoc.version>3.1.1</springdoc.version>
         <bouncycastle.version>1.86</bouncycastle.version>
+        <bucket4j.version>8.21.0</bucket4j.version>
+        <jqwik.version>1.9.3</jqwik.version>
     </properties>
 
     <dependencyManagement>
@@ -87,6 +89,17 @@
             <version>${bouncycastle.version}</version>
         </dependency>
 
+        <!-- Rate limiting (token bucket) -->
+        <dependency>
+            <groupId>com.bucket4j</groupId>
+            <artifactId>bucket4j_jdk17-core</artifactId>
+            <version>${bucket4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+        </dependency>
+
         <!-- Arquitetura modular -->
         <dependency>
             <groupId>org.springframework.modulith</groupId>
@@ -122,6 +135,13 @@
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>testcontainers-junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <!-- Testes baseados em propriedades (gera milhares de cenários aleatórios) -->
+            <groupId>net.jqwik</groupId>
+            <artifactId>jqwik</artifactId>
+            <version>${jqwik.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

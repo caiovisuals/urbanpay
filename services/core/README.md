@@ -34,6 +34,11 @@ Testes (sobem um Postgres real com Testcontainers, então precisam de Docker):
 mvn verify
 ```
 
+Além dos testes de exemplo, `LedgerPropertyTests` faz **testes baseados em modelo** com jqwik: gera
+sequências aleatórias de depósitos, transferências (inclusive inválidas) e reenvios idempotentes,
+executa contra o ledger real e compara com um modelo trivial em memória. Se algo divergir, o jqwik
+reduz a sequência ao menor contraexemplo e imprime a seed para reproduzir.
+
 ## Endpoints
 
 | Método | Rota | Descrição |
@@ -81,6 +86,13 @@ na mesma transação da transferência. Repetir a requisição devolve o mesmo r
 - PIN bloqueia por 15 min após 5 erros. A contagem roda em transação própria, então é registrada
   mesmo quando a transferência é abortada.
 
+**Rate limiting (Bucket4j).** Token bucket por IP no login (20/min) e no cadastro (10/h), e
+contador de **falhas** por e-mail (5 a cada 15 min, zerado no login bem-sucedido). O limite por
+e-mail freia ataques distribuídos em vários IPs, e não há bloqueio permanente, para que um atacante
+não consiga trancar a conta da vítima. A resposta é 429 com `Retry-After`. O IP do usuário chega
+pelo `X-Forwarded-For`, aceito só de proxies internos (o BFF). Os buckets ficam em memória: com
+várias réplicas, troque por um `ProxyManager` do Bucket4j sobre Redis.
+
 **IDs UUIDv7.** Ordenados por tempo, mantêm os índices B-tree compactos.
 
 ## Próximas fases
@@ -88,4 +100,4 @@ na mesma transação da transferência. Repetir a requisição devolve o mesmo r
 3. Outbox transacional + Kafka (notificações, auditoria).
 4. Pix: chaves (DICT simulado), máquina de estados, antifraude, limites noturnos, MED.
 5. Porquinhos como subcontas, cartões (tokenização), crédito.
-6. Rate limit no gateway, OpenTelemetry, testes de carga.
+6. Rate limit distribuído (Redis), OpenTelemetry, testes de carga.
