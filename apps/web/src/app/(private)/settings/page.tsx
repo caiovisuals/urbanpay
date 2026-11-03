@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { User } from "@/_lib/db"
+import { User } from "@/_lib/types"
 
 export default function Settings() {
     const [user, setUser] = useState<User | null>(null)
@@ -10,11 +10,9 @@ export default function Settings() {
     const [avatarFile, setAvatarFile] = useState<File | null>(null)
     const [isEditing, setIsEditing] = useState(false)
 
-    const userId = 1
-
     useEffect(() => {
         async function fetchUser() {
-            const res = await fetch(`/api/user/settings?userId=${userId}`)
+            const res = await fetch("/api/user/settings")
             const data = await res.json()
             setUser(data)
             setForm({ fullName: data.fullName, email: data.email, phone: data.phone })
@@ -39,7 +37,6 @@ export default function Settings() {
         if (avatarFile) {
             const formData = new FormData()
             formData.append("file", avatarFile)
-            formData.append("userId", String(userId))
 
             const uploadRes = await fetch("/api/user/upload-avatar", {
                 method: "POST",
@@ -52,7 +49,7 @@ export default function Settings() {
         const res = await fetch("/api/user/settings", {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ userId, ...form, avatarUrl }),
+            body: JSON.stringify({ ...form, avatarUrl }),
         })
 
         const updatedUser = await res.json()

@@ -1,0 +1,4 @@
+# Perfil de desenvolvimento: habilita o endpoint de depósito simulado (/api/v1/dev/deposits).
+logging:
+  level:
+    com.urbanpay: DEBUG

@@ -1,44 +1,38 @@
 import { NextResponse } from "next/server"
-import { users, Transaction } from "@/_lib/db"
+import type { NextRequest } from "next/server"
+import { callCoreAsUser } from "@/_lib/core/bff"
+import type { StatementItem } from "@/_lib/types"
 
-function getUserByToken(token?: string) {
-    if (!token) return null
-    return users.find(user => user.token === token)
+type Statement = { items: StatementItem[]; nextCursor: number | null }
+
+/** Extrato paginado por cursor: /api/user/transactions?cursor=123&limit=20 */
+export async function GET(req: NextRequest) {
+    const params = new URLSearchParams()
+    const cursor = req.nextUrl.searchParams.get("cursor")
+    const limit = req.nextUrl.searchParams.get("limit")
+    if (cursor && /^\d+$/.test(cursor)) params.set("cursor", cursor)
+    if (limit && /^\d+$/.test(limit)) params.set("limit", limit)
+
+    return callCoreAsUser<Statement>(`/api/v1/accounts/me/statement?${params}`, {}, (s) => ({
+        transactions: s.items,
+        nextCursor: s.nextCursor,
+    }))
 }
 
-export async function GET(req: Request) {
-    const cookie = req.headers.get("cookie") || ""
-    const token = cookie.split("token=")[1]?.split(";")[0]
-
-    const user = getUserByToken(token)
-    if (!user) return NextResponse.json({ error: "Usuário não autenticado" }, { status: 401 })
-
-    return NextResponse.json({ transactions: user.transactions || [] })
-}
-
-export async function POST(req: Request) {
-    const cookie = req.headers.get("cookie") || ""
-    const token = cookie.split("token=")[1]?.split(";")[0]
-
-    const user = getUserByToken(token)
-    if (!user) return NextResponse.json({ error: "Usuário não autenticado" }, { status: 401 })
-
-    const { value, type, description }: { value: number; type: "inflow" | "out"; description?: string } = await req.json()
-
-    if (!user.transactions) user.transactions = []
-
-    const transaction: Transaction = {
-        id: user.transactions.length + 1,
-        status: "completed",
-        value,
-        date: new Date(),
-        description,
-        method: "internal",
-        fromUserId: type === "out" ? user.id : undefined,
-        toUserId: type === "inflow" ? user.id : undefined,
+/**
+ * Transferência. O cliente DEVE gerar uma Idempotency-Key (ex.: crypto.randomUUID())
+ * uma vez por intenção de transferir e reenviá-la em caso de retry.
+ */
+export async function POST(req: NextRequest) {
+    const idempotencyKey = req.headers.get("idempotency-key")
+    if (!idempotencyKey) {
+        return NextResponse.json({ error: "Cabeçalho Idempotency-Key é obrigatório" }, { status: 400 })
     }
+    const { toAccountId, amount, description, pin } = await req.json()
 
-    user.transactions.push(transaction)
-
-    return NextResponse.json({ transaction })
+    return callCoreAsUser("/api/v1/transfers", {
+        method: "POST",
+        headers: { "Idempotency-Key": idempotencyKey },
+        body: { toAccountId, amount, description, pin },
+    })
 }

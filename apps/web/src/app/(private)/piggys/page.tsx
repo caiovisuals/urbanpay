@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState, useRef } from "react"
-import { Piggy } from "@/_lib/db"
+import { Piggy } from "@/_lib/types"
 
 export default function Piggys() {
     const [piggys, setPiggys] = useState<Piggy[]>([])

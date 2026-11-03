@@ -112,8 +112,8 @@ export default function RegisterPage() {
             return
         }
 
-        if (form.pin.length !== 4) {
-            setError("O PIN deve ter exatamente 4 dígitos")
+        if (form.pin.length !== 6) {
+            setError("O PIN deve ter exatamente 6 dígitos")
             setLoading(false)
             return
         }
@@ -154,8 +154,8 @@ export default function RegisterPage() {
                     value={form.cpf} onChange={(e) => { const digits = e.target.value.replace(/\D/g, "").slice(0, 11); setForm({ ...form, cpf: formatCPF(digits) }) }}/>
                 </div>
                 <div className="flex flex-row gap-4">
-                    <input type="text" placeholder="PIN" className="w-full p-3 rounded bg-gray-700" 
-                    value={form.pin} onChange={(e) => setForm({ ...form, pin: e.target.value.replace(/\D/g, "").slice(0, 4) })} />
+                    <input type="password" inputMode="numeric" autoComplete="off" placeholder="PIN (6 dígitos)" className="w-full p-3 rounded bg-gray-700" 
+                    value={form.pin} onChange={(e) => setForm({ ...form, pin: e.target.value.replace(/\D/g, "").slice(0, 6) })} />
                     <input type="date" placeholder="" className="w-full p-3 rounded bg-gray-700" 
                     value={form.birthDate ? new Date(form.birthDate).toISOString().split("T")[0] : ""} onChange={(e) => setForm({ ...form, birthDate: new Date(e.target.value) })}/>
                 </div>

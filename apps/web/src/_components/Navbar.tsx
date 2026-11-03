@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useEffect, useState } from "react"
-import type { User } from "@/_lib/db"
+import type { User } from "@/_lib/types"
 
 export default function Navbar() {
     const pathname = usePathname()
@@ -15,7 +15,7 @@ export default function Navbar() {
             const res = await fetch("/api/me", { credentials: "include" })
             if (res.ok) {
             const data = await res.json()
-            setUser(data)
+            setUser(data.user ?? null)
             }
         } catch (err) {
             console.error("Erro ao buscar usuário:", err)
@@ -26,6 +26,7 @@ export default function Navbar() {
 
     const navItems = [
         { icon: "", label: "Dashboard", href: "/dashboard" },
+        { icon: "", label: "Transferir", href: "/transfer" },
         { icon: "", label: "Cartões", href: "/cards" },
         { icon: "", label: "Porquinhos", href: "/piggys" },
         { icon: "", label: "Finanças", href: "/loans" },
