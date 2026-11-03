@@ -60,3 +60,4 @@ coverage/
 # Java / Maven
 target/
 *.iml
+.jqwik-database
