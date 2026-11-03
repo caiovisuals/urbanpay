@@ -1,12 +1,9 @@
 import { NextResponse } from "next/server"
-import { users, Card } from "@/_lib/db"
 
-export async function GET(req: Request) {
-    const cookie = req.headers.get("cookie") || ""
-    const token = cookie.split("token=")[1]?.split(";")[0]
+/** Produto ainda não migrado para o serviço Java (ver roadmap no README). */
+function notImplemented() {
+    return NextResponse.json({ error: "Funcionalidade em migração para o core" }, { status: 501 })
 }
 
-export async function POST(req: Request) {
-    const cookie = req.headers.get("cookie") || ""
-    const token = cookie.split("token=")[1]?.split(";")[0]
-}
+export const GET = notImplemented
+export const POST = notImplemented

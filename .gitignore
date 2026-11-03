@@ -56,3 +56,7 @@ coverage/
 # Misc
 .tmp/
 .cache/
+# =========================
+# Java / Maven
+target/
+*.iml

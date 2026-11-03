@@ -1,0 +1,38 @@
+# Ambiente local: Postgres + serviço core (Java).
+#   docker compose up -d --build
+# API em http://localhost:8080  |  Swagger em http://localhost:8080/swagger-ui.html
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: urbanpay
+      POSTGRES_USER: urbanpay
+      POSTGRES_PASSWORD: urbanpay
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U urbanpay -d urbanpay"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  core:
+    build: ./services/core
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      DB_URL: jdbc:postgresql://postgres:5432/urbanpay
+      DB_USER: urbanpay
+      DB_PASSWORD: urbanpay
+      # Em produção, injete chaves RSA reais (via Vault/KMS). Vazias = par efêmero de dev.
+      JWT_PRIVATE_KEY: ${JWT_PRIVATE_KEY:-}
+      JWT_PUBLIC_KEY: ${JWT_PUBLIC_KEY:-}
+    ports:
+      - "8080:8080"
+
+volumes:
+  pgdata:

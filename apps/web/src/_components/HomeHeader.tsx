@@ -3,7 +3,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { useEffect, useState } from "react"
-import type { User } from "@/_lib/db"
+import type { User } from "@/_lib/types"
 
 export default function HomeHeader() {
     const [user, setUser] = useState<User | null>(null)

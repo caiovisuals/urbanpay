@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useEffect, useState } from "react"
-import type { User } from "@/_lib/db"
+import type { User } from "@/_lib/types"
 
 export default function Navbar() {
     const pathname = usePathname()

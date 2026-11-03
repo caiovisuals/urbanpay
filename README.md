@@ -20,13 +20,38 @@ Este repositório tem como objetivo estudar e desenvolver o código-fonte e os r
 - Praticar boas práticas de código, organização de projeto, versionamento e escalabilidade
 - Servir como base para testes, estudos de UX/UI e evolução técnica, sem fins comerciais
 
+## Arquitetura
+
+```
+apps/web (Next.js) ──┐   BFF: telas + rotas /api que guardam os tokens em cookie httpOnly
+apps/mobile (Expo) ──┤
+                     ▼
+        services/core (Java 21 + Spring Boot)   identidade + ledger de partidas dobradas
+                     ▼
+                PostgreSQL
+```
+
+- **Java (`services/core`)**: tudo que envolve dinheiro, identidade e regras de negócio.
+  Detalhes em [services/core/README.md](services/core/README.md).
+- **TypeScript (`apps/web`)**: interface e BFF (Backend for Frontend). As rotas `/api` do Next.js
+  não têm regra de negócio: autenticam via cookie, chamam o core e adaptam a resposta para a tela.
+  O `src/proxy.ts` protege as páginas validando o JWT com a chave pública do core.
+
+## Como rodar
+
+```bash
+cp .env.example .env
+docker compose up -d postgres
+(cd services/core && SPRING_PROFILES_ACTIVE=dev mvn spring-boot:run)
+npm install && npm run dev
+```
+
+Web em http://localhost:3000 · API em http://localhost:8080/swagger-ui.html
+
 ## Dependências
 
-O projeto foi desenvolvido com as seguintes dependências:
-
-- **[Next.js](https://nextjs.org)** – v16.2.1
-- **[Bcrypt](https://www.npmjs.com/package/bcrypt)** – ^3.0.2  
-- **[jose](https://www.npmjs.com/package/jose)** – ^6.1.0
+- **[Next.js](https://nextjs.org)** – v16.2.1 · **[jose](https://www.npmjs.com/package/jose)** – ^6.1.0
+- **Java 21**, **Spring Boot 4.1**, **Spring Modulith**, **PostgreSQL 16**, **Flyway**, **Testcontainers**
 
 by caiothedev<br/>
-#urbanpay #bank #nextjs #fintech #finance
+#urbanpay #bank #nextjs #java #springboot #fintech #finance
